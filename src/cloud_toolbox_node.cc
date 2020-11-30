@@ -1,58 +1,58 @@
 # include "cloud_toolbox.h"
 
 
-void Cloud_Toolbox::bin2cloud(std::string bin_file, pcl::PointCloud<pcl::PointXYZI>::Ptr points){
-    std::fstream input(bin_file.c_str(), std::ios::in | std::ios::binary);
-    if(!input.good()){
-		std::cerr << "Could not read file: " << bin_file << std::endl;
-		exit(EXIT_FAILURE);
+int main(){
+	std::string bin_file1 = "/home/wyl/workspace/Hesai/samples/pandarset/000006.bin";
+	std::string pcd_file1 = "/home/wyl/workspace/Hesai/samples/pcd/000000.pcd";
+	std::string img_file  =  "/home/wyl/workspace/Hesai/samples/semseg_res/color_mask_000000.png";
+	std::string label_file = "/home/wyl/workspace/Hesai/samples/label_2_v3/000000.txt";
+	
+	
+	Cloud_Toolbox vis(bin_file1, pcd_file1);
+
+
+	pcl::PointCloud<pcl::PointXYZI>::Ptr points1 (new pcl::PointCloud<pcl::PointXYZI>);
+	pcl::PointCloud<pcl::PointXYZI>::Ptr points2 (new pcl::PointCloud<pcl::PointXYZI>);
+
+	std::shared_ptr<pcl::visualization::PCLVisualizer> viewer(new pcl::visualization::PCLVisualizer ("Simple Cloud Visualizer"));
+
+	// vis.bin2cloud(bin_file1, points1);
+	// // vis.cloud2pcd(points1, vis.pcd_file);
+	// vis.pcd2cloud(pcd_file1, points2);
+	// // vis.vis_cloud(points1, viewer);
+	// vis.vis_cloud(points1, viewer);
+
+	// while(!viewer->wasStopped()){
+	// 	viewer->spinOnce(100);
+	// }
+
+	// cv::Mat img;
+	// vis.image2cv(img_file, img);
+	// cv::namedWindow(img_file, cv::WINDOW_AUTOSIZE);
+	// cv::imshow(img_file, img);
+	// cv::waitKey();
+
+	vis.label2bboxes(label_file);
+	for (int i = 0; i < vis.bboxes.size(); i ++){
+		Bbox tmp_bbox;
+		tmp_bbox = vis.bboxes[i];
+		if (tmp_bbox.cls_type != "DontCare"){
+			std::cout << "-----------box-" << i <<"------"<<std::endl;
+			std::cout<<"tmp_bbox.cls_type: "<<tmp_bbox.cls_type<<std::endl;
+			std::cout<<"tmp_bbox.trucation: "<<tmp_bbox.trucation<<std::endl;
+			std::cout<<"tmp_bbox.occlusion: "<<tmp_bbox.occlusion<<std::endl;
+			std::cout<<"tmp_bbox.alpha: "<<tmp_bbox.alpha<<std::endl;
+			std::cout<<"tmp_bbox.pos2d: "<<tmp_bbox.pos2d<<std::endl;
+			std::cout<<"tmp_bbox.pos3d: "<<tmp_bbox.pos3d<<std::endl;
+			std::cout<<"tmp_bbox.size3d: "<<tmp_bbox.size3d<<std::endl;
+			std::cout<<"tmp_bbox.rotation: "<<tmp_bbox.rotation<<std::endl;
+			std::cout<<"tmp_bbox.score: "<<tmp_bbox.score<<std::endl;
+		}
+
 	}
-	input.seekg(0, std::ios::beg);
 
-	points->clear();
-    int i;
-	for (i=0; input.good() && !input.eof(); i++) {
-		pcl::PointXYZI point;
-		input.read((char *) &point.x, 3*sizeof(float));
-		input.read((char *) &point.intensity, sizeof(float));
-		points->push_back(point);
-	}
-	input.close();
-	std::cout << "Read .bin point cloud with " << i << " points." << std::endl;
-};
 
-void Cloud_Toolbox::pcd2cloud(std::string pcd_file, pcl::PointCloud<pcl::PointXYZI>::Ptr points){
-	points->clear();
-	pcl::io::loadPCDFile (pcd_file, *points);
-};
 
-void Cloud_Toolbox::cloud2bin(pcl::PointCloud<pcl::PointXYZI>::Ptr points, std::string bin_file){
-	std::ofstream out_file(bin_file.c_str(), std::ios::out | std::ios::binary);
-	for (int i = 0; i < points->size(); i++){
-		out_file.write((char*)& points->at(i).x, sizeof(points->at(i).x));
-		out_file.write((char*)& points->at(i).y, sizeof(points->at(i).y));
-		out_file.write((char*)& points->at(i).z, sizeof(points->at(i).z));
-		out_file.write((char *)& points->at(i).intensity, sizeof(points->at(i).intensity));
-	}
-	out_file.close();
-
-};
-
-void Cloud_Toolbox::cloud2pcd(pcl::PointCloud<pcl::PointXYZI>::Ptr points, std::string pcd_file){
-	pcl::PCDWriter writer;
-	writer.write<pcl::PointXYZI> (pcd_file, *points);	
-};
-
-void Cloud_Toolbox::vis_cloud(pcl::PointCloud<pcl::PointXYZI>::Ptr points){
-	pcl::visualization::CloudViewer viewer ("Simple Cloud Viewer");
-	viewer.showCloud(points);
-	while (!viewer.wasStopped()){};
-};
-
-void Cloud_Toolbox::spin(){};
-void Cloud_Toolbox::image2cv(){};
-void Cloud_Toolbox::label2bbox(){};
-void Cloud_Toolbox::calib2matrix(){};
-void Cloud_Toolbox::axis_trans(){};
-void Cloud_Toolbox::vis_ros(){};
-
+	
+	return 0;
+}
