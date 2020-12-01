@@ -21,7 +21,11 @@ link_directories(
     ${OpenCV_INCLUDE_DIRS}
     )
 
-add_executable(cloud_toolbox src/cloud_toolbox.cc src/cloud_toolbox_node.cc)
+add_executable(cloud_toolbox 
+    src/cloud_toolbox.cc
+    src/bbox.cc 
+    src/cloud_toolbox_node.cc
+    src/calib.cc)
 
 
 target_link_libraries(cloud_toolbox

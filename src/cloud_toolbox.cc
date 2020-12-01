@@ -1,7 +1,10 @@
 # include "cloud_toolbox.h"
 
 
-void Cloud_Toolbox::bin2cloud(std::string bin_file, pcl::PointCloud<pcl::PointXYZI>::Ptr points){
+WWW::Cloud_Toolbox::Cloud_Toolbox(){};
+WWW::Cloud_Toolbox::~Cloud_Toolbox(){};
+
+void WWW::Cloud_Toolbox::bin2cloud(std::string bin_file, pcl::PointCloud<pcl::PointXYZI>::Ptr points){
     std::fstream input(bin_file.c_str(), std::ios::in | std::ios::binary);
     if(!input.good()){
 		std::cerr << "Could not read file: " << bin_file << std::endl;
@@ -21,12 +24,12 @@ void Cloud_Toolbox::bin2cloud(std::string bin_file, pcl::PointCloud<pcl::PointXY
 	std::cout << "Read .bin point cloud with " << i << " points." << std::endl;
 };
 
-void Cloud_Toolbox::pcd2cloud(std::string pcd_file, pcl::PointCloud<pcl::PointXYZI>::Ptr points){
+void WWW::Cloud_Toolbox::pcd2cloud(std::string pcd_file, pcl::PointCloud<pcl::PointXYZI>::Ptr points){
 	points->clear();
 	pcl::io::loadPCDFile (pcd_file, *points);
 };
 
-void Cloud_Toolbox::cloud2bin(pcl::PointCloud<pcl::PointXYZI>::Ptr points, std::string bin_file){
+void WWW::Cloud_Toolbox::cloud2bin(pcl::PointCloud<pcl::PointXYZI>::Ptr points, std::string bin_file){
 	std::ofstream out_file(bin_file.c_str(), std::ios::out | std::ios::binary);
 	for (int i = 0; i < points->size(); i++){
 		out_file.write((char*)& points->at(i).x, sizeof(points->at(i).x));
@@ -38,12 +41,12 @@ void Cloud_Toolbox::cloud2bin(pcl::PointCloud<pcl::PointXYZI>::Ptr points, std::
 
 };
 
-void Cloud_Toolbox::cloud2pcd(pcl::PointCloud<pcl::PointXYZI>::Ptr points, std::string pcd_file){
+void WWW::Cloud_Toolbox::cloud2pcd(pcl::PointCloud<pcl::PointXYZI>::Ptr points, std::string pcd_file){
 	pcl::PCDWriter writer;
 	writer.write<pcl::PointXYZI> (pcd_file, *points);	
 };
 
-void Cloud_Toolbox::vis_cloud(pcl::PointCloud<pcl::PointXYZI>::Ptr points, std::shared_ptr<pcl::visualization::PCLVisualizer> viewer){
+void WWW::Cloud_Toolbox::vis_cloud(pcl::PointCloud<pcl::PointXYZI>::Ptr points, std::shared_ptr<pcl::visualization::PCLVisualizer> viewer){
 
 
 
@@ -75,22 +78,23 @@ void Cloud_Toolbox::vis_cloud(pcl::PointCloud<pcl::PointXYZI>::Ptr points, std::
 
 };
 
-void Cloud_Toolbox::spin(){};
-void Cloud_Toolbox::image2cv(std::string img_file, cv::Mat &img){
+void WWW::Cloud_Toolbox::spin(){};
+
+void WWW::Cloud_Toolbox::image2cv(std::string img_file, cv::Mat &img){
 	img = cv::imread(img_file, cv::IMREAD_UNCHANGED);
 	// cv::namedWindow(img_file, cv::WINDOW_AUTOSIZE);
 	// cv::imshow(img_file, img);
 	// cv::waitKey();
 
 };
-void Cloud_Toolbox::label2bboxes(std::string label_file){
+void WWW::Cloud_Toolbox::label2bboxes(std::string label_file){
 	std::ifstream infile;
 	infile.open(label_file.data());
 	std::string line, word;
 	
 	while (std::getline(infile, line))
 	{
-		Bbox tmp_bbox;
+		WWW::Bbox tmp_bbox;
 		tmp_bbox.src = line;
 
 		// std::cout<<"------label2bboxes-----"<<std::endl;
@@ -121,6 +125,9 @@ void Cloud_Toolbox::label2bboxes(std::string label_file){
 		tmp_bbox.size3d << l,w,h;
 
 
+		tmp_bbox.pos2corner_3d();
+
+
 		// std::cout<<"tmp_bbox.cls_type: "<<tmp_bbox.cls_type<<std::endl;
 		// std::cout<<"tmp_bbox.trucation: "<<tmp_bbox.trucation<<std::endl;
 		// std::cout<<"tmp_bbox.occlusion: "<<tmp_bbox.occlusion<<std::endl;
@@ -136,7 +143,34 @@ void Cloud_Toolbox::label2bboxes(std::string label_file){
 	
 
 };
-void Cloud_Toolbox::calib2matrix(){};
-void Cloud_Toolbox::axis_trans(){};
-void Cloud_Toolbox::vis_ros(){};
+void WWW::Cloud_Toolbox::load_calib(std::string calib_file){
+	std::ifstream infile;
+	infile.open(calib_file.data());
+	std::string line, word;
+	
+
+
+	for (int idx = 0; idx < 6; idx++){
+		std::getline(infile, line);
+		std::istringstream istr(line);
+		std::string Mat_name;
+		Eigen::Matrix<float, 3,4> tmp_mat;
+
+		istr >> Mat_name;
+		for (int i = 0; i < 3; i++){
+			for (int j = 0; j < 4; j++){
+				istr >> tmp_mat(i,j);
+			}
+		}
+
+		
+	}
+
+
+
+
+
+};
+void WWW::Cloud_Toolbox::axis_trans(){};
+void WWW::Cloud_Toolbox::vis_ros(){};
 

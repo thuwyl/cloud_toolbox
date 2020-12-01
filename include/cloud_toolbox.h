@@ -15,17 +15,17 @@
 
 
 #include <bbox.h>
-
+#include <calib.h>
 #include <math.h>
 
 #include <vector>
 
-
+namespace WWW{
 class Cloud_Toolbox
 {
 public:
-    Cloud_Toolbox(std::string bin_file, std::string pcd_file) : bin_file(bin_file), pcd_file(pcd_file){};
-    ~Cloud_Toolbox(){};
+    Cloud_Toolbox();
+    ~Cloud_Toolbox();
     void spin();
 
     // private:
@@ -37,7 +37,7 @@ public:
 
     void image2cv(std::string img_file, cv::Mat &img);
     void label2bboxes(std::string label_file);
-    void calib2matrix();
+    void load_calib(std::string calib_file);
     void axis_trans();
     void vis_ros();
 
@@ -47,8 +47,10 @@ public:
     std::string label_file;
     std::string calib_file;
 
-    std::vector<Bbox> bboxes;
+    std::vector<WWW::Bbox> bboxes;
+
+    WWW::Calib calib;
 
     //output
     std::string pcd_file;
-};
+};}

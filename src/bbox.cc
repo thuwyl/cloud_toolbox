@@ -1,9 +1,10 @@
 #include <bbox.h>
 
 
+WWW::Bbox::Bbox(){};
+WWW::Bbox::~Bbox(){};
 
-
-void Bbox::pos2corner_3d(){
+void WWW::Bbox::pos2corner_3d(){
     float l = size3d(0);
     float w = size3d(1);
     float h = size3d(2);
@@ -49,17 +50,46 @@ void Bbox::pos2corner_3d(){
 
 
 
-void Bbox::corner2pos_3d(){
-    pos3d = corner3d.bottomRows(4).colwise().sum()/4;
-    size3d = corner3d.topRows(1)-corner3d.bottomRows(1);
+void WWW::Bbox::corner2pos_3d(){
+    pos3d = (corner3d.bottomRows(4).colwise().sum()/4);
+
+    float x = pos3d(0);
+    float y = pos3d(1);
+    float z = pos3d(2);
+
+    Eigen::Matrix<float, 8,3> pos_cen;
+    pos_cen << x,y,z,
+               x,y,z,
+               x,y,z,
+               x,y,z,
+               x,y,z,
+               x,y,z,
+               x,y,z,
+               x,y,z;
+
+    Eigen::Matrix<float, 8,3> rotated_delta_pos, delta_pos;
+
+    rotated_delta_pos = corner3d-pos_cen;
 
     Eigen::Vector3f ori_vec;
-    ori_vec = corner3d.topRows(2).colwise().sum()/2 - pos3d;
-    rotation = std::atan(ori_vec(1)/ori_vec(0));
+    ori_vec = (rotated_delta_pos.topRows(2).colwise().sum()/2).transpose();
+    rotation = std::atan2(ori_vec(1), ori_vec(0));
+    
+    Eigen::Matrix3f R;
+    R << std::cos(-rotation), -std::sin(-rotation), 0,
+         std::sin(-rotation),  std::cos(-rotation), 0,
+                0          ,          0        , 1;
+    
+    delta_pos = (R*rotated_delta_pos.transpose()).transpose();
+
+    size3d = (delta_pos.row(0)-delta_pos.row(7)).transpose();
+
+
+    
 };
 
 
 
 //TODO
-void Bbox::pos2corner_2d(){};
-void Bbox::corner2pos_2d(){};
+void WWW::Bbox::pos2corner_2d(){};
+void WWW::Bbox::corner2pos_2d(){};

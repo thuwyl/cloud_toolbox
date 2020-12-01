@@ -1,17 +1,15 @@
 #include <iostream>
 #include <Eigen/Dense>
 
-
+namespace WWW{
 // axis definition:
 // front-x  left-y  up-z
-
-
 
 class Bbox
 {
 public:
-    Bbox(){};
-    ~Bbox(){};
+    Bbox();
+    ~Bbox();
 // private:
     std::string src;
     std::string cls_type;
@@ -53,3 +51,4 @@ public:
 
 
 };
+}
