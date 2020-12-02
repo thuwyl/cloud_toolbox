@@ -163,8 +163,16 @@ void WWW::Cloud_Toolbox::load_calib(std::string calib_file){
 			}
 		}
 
-		
+		calib.P.push_back(tmp_mat);
 	}
+
+	std::getline(infile, line);
+	std::istringstream istr(line);
+	std::string Mat_name;
+	Eigen::Matrix<float, 3,4> tmp_mat;
+
+	istr >> Mat_name;
+
 
 
 

@@ -150,6 +150,33 @@ src/bbox.cc.s:
 	$(MAKE) -f CMakeFiles/cloud_toolbox.dir/build.make CMakeFiles/cloud_toolbox.dir/src/bbox.cc.s
 .PHONY : src/bbox.cc.s
 
+src/calib.o: src/calib.cc.o
+
+.PHONY : src/calib.o
+
+# target to build an object file
+src/calib.cc.o:
+	$(MAKE) -f CMakeFiles/cloud_toolbox.dir/build.make CMakeFiles/cloud_toolbox.dir/src/calib.cc.o
+.PHONY : src/calib.cc.o
+
+src/calib.i: src/calib.cc.i
+
+.PHONY : src/calib.i
+
+# target to preprocess a source file
+src/calib.cc.i:
+	$(MAKE) -f CMakeFiles/cloud_toolbox.dir/build.make CMakeFiles/cloud_toolbox.dir/src/calib.cc.i
+.PHONY : src/calib.cc.i
+
+src/calib.s: src/calib.cc.s
+
+.PHONY : src/calib.s
+
+# target to generate assembly for a file
+src/calib.cc.s:
+	$(MAKE) -f CMakeFiles/cloud_toolbox.dir/build.make CMakeFiles/cloud_toolbox.dir/src/calib.cc.s
+.PHONY : src/calib.cc.s
+
 src/cloud_toolbox.o: src/cloud_toolbox.cc.o
 
 .PHONY : src/cloud_toolbox.o
@@ -216,6 +243,9 @@ help:
 	@echo "... src/bbox.o"
 	@echo "... src/bbox.i"
 	@echo "... src/bbox.s"
+	@echo "... src/calib.o"
+	@echo "... src/calib.i"
+	@echo "... src/calib.s"
 	@echo "... src/cloud_toolbox.o"
 	@echo "... src/cloud_toolbox.i"
 	@echo "... src/cloud_toolbox.s"

@@ -2,6 +2,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/cloud_toolbox.dir/src/cloud_toolbox.cc.o"
   "CMakeFiles/cloud_toolbox.dir/src/bbox.cc.o"
   "CMakeFiles/cloud_toolbox.dir/src/cloud_toolbox_node.cc.o"
+  "CMakeFiles/cloud_toolbox.dir/src/calib.cc.o"
   "cloud_toolbox.pdb"
   "cloud_toolbox"
 )
