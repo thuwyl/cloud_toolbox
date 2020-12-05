@@ -10,19 +10,19 @@ void WWW::Bbox::pos2corner_3d(){
     float h = size3d(2);
 
     Eigen::Matrix<float, 8,3> delta_pos, rotated_delta_pos;
-    delta_pos<< l/2, 0, w/2,
-                l/2, 0, -w/2,
-                -l/2, 0, -w/2,
-                -l/2, 0, w/2,
-                l/2, -h, w/2,
-                l/2, -h, -w/2,
-                -l/2, -h, -w/2,
-                -l/2, -h, w/2;
+    delta_pos<< l/2,  w/2, h, 
+                l/2, -w/2, h,
+               -l/2,  w/2, h,
+               -l/2, -w/2, h,
+                l/2,  w/2, 0,
+                l/2, -w/2, 0,
+               -l/2,  w/2, 0,
+               -l/2, -w/2, 0;
     
     Eigen::Matrix3f R;
-    R << std::cos(rotation),  0,    std::sin(rotation),
-                0          ,  1,                     0,
-         -std::sin(rotation),  0,    std::cos(rotation);
+    R << std::cos(rotation), -std::sin(rotation), 0,
+         std::sin(rotation),  std::cos(rotation), 0,
+                0          ,          0        , 1;
     
     rotated_delta_pos = (R*delta_pos.transpose()).transpose();
 
@@ -71,21 +71,18 @@ void WWW::Bbox::corner2pos_3d(){
 
     rotated_delta_pos = corner3d-pos_cen;
 
-    Eigen::Vector3f ori_vec, tmp_size;
+    Eigen::Vector3f ori_vec;
     ori_vec = (rotated_delta_pos.topRows(2).colwise().sum()/2).transpose();
     rotation = std::atan2(ori_vec(1), ori_vec(0));
     
     Eigen::Matrix3f R;
-    R << std::cos(-rotation),  std::sin(-rotation), 0,
-        -std::sin(-rotation),  std::cos(-rotation), 0,
-                0          ,          0           , 1;
+    R << std::cos(-rotation), -std::sin(-rotation), 0,
+         std::sin(-rotation),  std::cos(-rotation), 0,
+                0          ,          0        , 1;
     
-    delta_pos = (rotated_delta_pos.transpose()).transpose();
+    delta_pos = (R*rotated_delta_pos.transpose()).transpose();
 
-    tmp_size = (delta_pos.row(0)-delta_pos.row(7)).transpose();
-    size3d(0) = tmp_size(1);
-    size3d(1) = tmp_size(0);
-    size3d(2) = tmp_size(3);
+    size3d = (delta_pos.row(0)-delta_pos.row(7)).transpose();
 
 
     
@@ -113,18 +110,18 @@ void WWW::Bbox::draw_bbox3d(std::shared_ptr<pcl::visualization::PCLVisualizer> v
 
 
     viewer->addLine<pcl::PointXYZI> (corner_cloud.points[0], corner_cloud.points[1], "3D bbox " + std::to_string(boxid) + "_1");
-    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[1], corner_cloud.points[2], "3D bbox " + std::to_string(boxid) + "_2");
-    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[2], corner_cloud.points[3], "3D bbox " + std::to_string(boxid) + "_3");
-    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[3], corner_cloud.points[0], "3D bbox " + std::to_string(boxid) + "_4");
+    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[1], corner_cloud.points[3], "3D bbox " + std::to_string(boxid) + "_2");
+    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[3], corner_cloud.points[2], "3D bbox " + std::to_string(boxid) + "_3");
+    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[2], corner_cloud.points[0], "3D bbox " + std::to_string(boxid) + "_4");
 
     viewer->addLine<pcl::PointXYZI> (corner_cloud.points[4], corner_cloud.points[5], "3D bbox " + std::to_string(boxid) + "_5");
-    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[5], corner_cloud.points[6], "3D bbox " + std::to_string(boxid) + "_6");
-    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[6], corner_cloud.points[7], "3D bbox " + std::to_string(boxid) + "_7");
-    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[7], corner_cloud.points[4], "3D bbox " + std::to_string(boxid) + "_8");
+    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[5], corner_cloud.points[7], "3D bbox " + std::to_string(boxid) + "_6");
+    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[7], corner_cloud.points[6], "3D bbox " + std::to_string(boxid) + "_7");
+    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[6], corner_cloud.points[4], "3D bbox " + std::to_string(boxid) + "_8");
 
     viewer->addLine<pcl::PointXYZI> (corner_cloud.points[0], corner_cloud.points[4], "3D bbox " + std::to_string(boxid) + "_9");
     viewer->addLine<pcl::PointXYZI> (corner_cloud.points[1], corner_cloud.points[5], "3D bbox " + std::to_string(boxid) + "_10");
-    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[2], corner_cloud.points[6], "3D bbox " + std::to_string(boxid) + "_11");
-    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[3], corner_cloud.points[7], "3D bbox " + std::to_string(boxid) + "_12");
+    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[3], corner_cloud.points[7], "3D bbox " + std::to_string(boxid) + "_11");
+    viewer->addLine<pcl::PointXYZI> (corner_cloud.points[2], corner_cloud.points[6], "3D bbox " + std::to_string(boxid) + "_12");
 
 } 

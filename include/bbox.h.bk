@@ -7,7 +7,7 @@
 
 namespace WWW{
 // axis definition:
-// front-y  right-x  down-z
+// front-x  left-y  up-z
 
 class Bbox
 {
@@ -30,7 +30,7 @@ public:
     //      0-------1
     //      |       |
     //      |       |
-    //      3-------2
+    //      2-------3
     
 
     Eigen::Vector3f pos3d;  //bottom center of the 3d bbox (x,y,z)
@@ -42,10 +42,10 @@ public:
     // corner3d:
     //          0-------1
     //        / |     / |
-    //      4---|---2   |
+    //      2---|---3   |
     //      |   4---|---5
     //      | /     | /
-    //      7-------6
+    //      6-------7
     void pos2corner_2d();
     void corner2pos_2d();
 
